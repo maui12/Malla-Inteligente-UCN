@@ -1,6 +1,84 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  safelist: [
+    // Backgrounds principales de las tarjetas
+    'bg-green-100',
+    'bg-pink-100',
+    'bg-red-100',
+    'bg-yellow-100',
+    'bg-blue-50',
+    // Backgrounds de los badges
+    'bg-green-200',
+    'bg-pink-200',
+    'bg-red-200',
+    'bg-yellow-200',
+    'bg-blue-200',
+    'bg-white',
+    // Borders
+    'border-green-400',
+    'border-pink-400',
+    'border-red-500',
+    'border-yellow-400',
+    'border-blue-300',
+    'border-2',
+    // Text colors
+    'text-green-800',
+    'text-green-600',
+    'text-green-700',
+    'text-pink-800',
+    'text-pink-600',
+    'text-pink-700',
+    'text-red-800',
+    'text-red-600',
+    'text-red-700',
+    'text-yellow-800',
+    'text-yellow-600',
+    'text-yellow-700',
+    'text-blue-800',
+    'text-blue-600',
+    'text-blue-400',
+    'text-gray-800',
+    'text-gray-700',
+    // Backgrounds de los puntos
+    'bg-green-500',
+    'bg-pink-500',
+    'bg-red-500',
+    'bg-yellow-500',
+    'bg-blue-400',
+    // Utilidades
+    'rounded-xl',
+    'rounded-md',
+    'rounded-full',
+    'shadow-lg',
+    'shadow-md',
+    'shadow-sm',
+    'shadow-xl',
+    'shadow-2xl',
+    'hover:shadow-xl',
+    'hover:shadow-2xl',
+    'hover:scale-105',
+    'hover:opacity-100',
+    'opacity-75',
+    'animate-pulse',
+    // Tamaños
+    'w-2',
+    'h-2',
+    'gap-1',
+    'mb-2',
+    'p-4',
+    'px-2',
+    'py-1',
+    // Text
+    'text-xs',
+    'text-sm',
+    'font-bold',
+    'uppercase',
+    'leading-tight',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -10,4 +88,3 @@ export default {
   },
   plugins: [],
 }
-
