@@ -1,12 +1,34 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  /* Tema claro (por defecto) */
+  --bg-color: #f8f9fa;
+  --text-color: #222;
+  --card-bg: #ffffff;
+  --border-color: #ddd;
+  --scrollbar-bg: #e0e0e0;
+}
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+[data-theme="dark"] {
+  --bg-color: #181a1b;
+  --text-color: #eaeaea;
+  --card-bg: #242526;
+  --border-color: #333;
+  --scrollbar-bg: #3a3b3c;
+}
 
+/* Estilos generales */
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f9fafb;
-    min-height: 100vh;
-    padding-bottom: 50px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+  font-family: Arial, sans-serif;
+}
+
+/* Scroll horizontal bonito */
+::-webkit-scrollbar {
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-bg);
+  border-radius: 4px;
 }

@@ -1,0 +1,148 @@
+.container {
+  min-height: 100vh;
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.sub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.carreraName {
+  font-weight: 600;
+}
+
+.catalogo {
+  color: var(--text-color);
+  opacity: 0.65;
+  margin-left: 8px;
+}
+
+.profileButton {
+  background: var(--accent-color, #007bff);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.profileButton:hover {
+  opacity: 0.95;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  margin-top: 60px;
+  color: var(--text-color);
+}
+
+/* Grid responsive */
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Semester column */
+.column {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.semTitle {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+/* Course card */
+.courseList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: default;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* Soft colored backgrounds with border indicator */
+.approved {
+  background-color: rgba(92, 184, 92, 0.12); /* green soft */
+  border-left: 4px solid #5cb85c;
+  color: var(--text-color);
+}
+
+.failed {
+  background-color: rgba(217, 83, 79, 0.12); /* red soft */
+  border-left: 4px solid #d9534f;
+  color: var(--text-color);
+}
+
+.projected {
+  background-color: rgba(13, 110, 253, 0.12); /* blue soft */
+  border-left: 4px solid #0d6efd;
+  color: var(--text-color);
+}
+
+.planned {
+  background-color: rgba(255, 193, 7, 0.12); /* yellow soft */
+  border-left: 4px solid #ffc107;
+  color: var(--text-color);
+}
+
+.neutral {
+  background-color: rgba(0,0,0,0.04);
+  border-left: 4px solid transparent;
+}
+
+.courseName {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.year {
+  margin-left: 8px;
+}

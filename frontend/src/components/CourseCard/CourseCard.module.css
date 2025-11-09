@@ -1,0 +1,37 @@
+.card {
+  border-radius: 10px;
+  padding: 20px;
+  font-weight: 500;
+  text-align: center;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-left: 4px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, background-color 0.3s, color 0.3s;
+}
+
+/* Efecto hover */
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Colores con opacidad suave */
+.approved {
+  background-color: rgba(89, 180, 89, 0.15);
+  border-left-color: #5cb85c;
+}
+
+.failed {
+  background-color: rgba(217, 83, 79, 0.15);
+  border-left-color: #d9534f;
+}
+
+.projected {
+  background-color: rgba(13, 110, 253, 0.15);
+  border-left-color: #0d6efd;
+}
+
+.planned {
+  background-color: rgba(255, 193, 7, 0.15);
+  border-left-color: #ffc107;
+}
