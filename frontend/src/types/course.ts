@@ -1,8 +1,7 @@
 export interface Course {
-  id: string;
-  name: string;
-  semester: number;
-  year: number;
-  status: string;
-  creditos: number;
+  codigo: string;        
+  asignatura: string;    
+  creditos: number;      
+  nivel: number;         
+  prereq: string;        //vienen como string en el endpoint
 }

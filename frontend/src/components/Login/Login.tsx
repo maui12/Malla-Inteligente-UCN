@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       "maria@example.com": {
         rut: "22222222-2",
         carreras: [
-          { codigo: "8266", nombre: "ITI", catalogo: "202410" },
+          { codigo: "8266", nombre: "ITI", catalogo: "203010" },
           { codigo: "8606", nombre: "ICCI", catalogo: "201610" },
         ],
       },
@@ -39,9 +39,12 @@ const Login: React.FC = () => {
       return;
     }
 
-    // 🔀 Redirección según cantidad de carreras
+    // Redirección según cantidad de carreras
     if (user.carreras.length > 1) {
-      navigate("/seleccion-carrera", { state: user });
+      const carrera = user.carreras[0];
+      navigate(`/malla/${user.rut}/${carrera.codigo}/${carrera.catalogo}`);
+      
+      //navigate("/seleccion-carrera", { state: user });  posible pantalla para seleccionar una carrera en especifico para usuarios con mas de una
     } else {
       const carrera = user.carreras[0];
       navigate(`/malla/${user.rut}/${carrera.codigo}/${carrera.catalogo}`);

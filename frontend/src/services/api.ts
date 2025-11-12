@@ -1,4 +1,4 @@
-import type { Course } from "../types/course";
+import type { Course } from "../types/Course";
 
 export async function fetchCourses(codigoCarrera?: string): Promise<Course[]> {
   const cursosPorCarrera: Record<string, Course[]> = {

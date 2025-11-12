@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CourseCard.module.css";
-import type { Course } from "../../types/course";
+import type { Course } from "../../types/Course";
 
 interface Props {
   course: Course;

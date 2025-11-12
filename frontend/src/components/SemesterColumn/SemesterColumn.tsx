@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./SemesterColumn.module.css";
 import CourseCard from "../CourseCard/CourseCard";
-import type { Course } from "../../types/course";
+import type { Course } from "../../types/Course";
 
 interface Props {
   semesterLabel: string;

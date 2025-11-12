@@ -101,6 +101,50 @@
   transform: translateY(-3px);
 }
 
+/* Fondo semitransparente detrás del modal */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Cuadro del modal al hacer click en un curso */
+.courseModal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 320px;
+  max-width: 90%;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.courseModal h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.courseModal p {
+  margin: 6px 0;
+  color: #555;
+}
+
+.closeButton {
+  margin-top: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 /* Soft colored backgrounds with border indicator */
 .approved {
   background-color: rgba(92, 184, 92, 0.12); /* green soft */
@@ -146,3 +190,5 @@
 .year {
   margin-left: 8px;
 }
+
+

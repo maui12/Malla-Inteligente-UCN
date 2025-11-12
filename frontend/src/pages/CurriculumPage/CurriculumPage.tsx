@@ -1,7 +1,10 @@
+// src/pages/CurriculumPage/CurriculumPage.tsx
 import React, { useEffect, useState } from "react";
 import { fetchCourses } from "../../services/api";
-import type { Course } from "../../types/course";
+import type { Course } from "../../types/Course";
+import type { CourseProgress } from "../../types/CourseProgress";
 import ProfileModal from "../../components/ProfileModal/ProfileModal";
+import CourseModal from "../../components/CourseModal/CourseModal";
 import styles from "./CurriculumPage.module.css";
 import { useLocation } from "react-router-dom";
 import type { Carrera } from "../../types/Carrera";
@@ -20,17 +23,20 @@ export default function CurriculumPage() {
   const location = useLocation();
   const state = (location.state || {}) as LocationState;
 
-  // si el login no pasó carreras, usamos el mock local de carreras
-  const carreras = state.carreras && state.carreras.length > 0 ? state.carreras : defaultCareers;
+  const carreras =
+    state.carreras && state.carreras.length > 0 ? state.carreras : defaultCareers;
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCareer, setSelectedCareer] = useState<Carrera>(carreras[0]);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+  // (Futuro) Datos de avance de alumno
+  const [progressData, setProgressData] = useState<CourseProgress[]>([]);
 
   useEffect(() => {
     setLoading(true);
-    // fetchCourses viene de services/api.ts (datos centralizados)
     fetchCourses()
       .then((data) => {
         setCourses(data);
@@ -40,38 +46,31 @@ export default function CurriculumPage() {
         setCourses([]);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [selectedCareer]);
 
-  // Recalcula semestres a partir de courses (agrupando por course.semester)
-  const semestres = courses.reduce<Record<number, Course[]>>((acc, c) => {
-    if (!acc[c.semester]) acc[c.semester] = [];
-    acc[c.semester].push(c);
+  // Agrupar cursos por nivel
+  const niveles = courses.reduce<Record<number, Course[]>>((acc, c) => {
+    if (!acc[c.nivel]) acc[c.nivel] = [];
+    acc[c.nivel].push(c);
     return acc;
   }, {});
 
-  // Mapa de estilos por estado (clase CSS)
-  const statusClass = (status: string) => {
-    switch (status) {
-      case "approved":
-        return styles.approved;
-      case "failed":
-        return styles.failed;
-      case "projected":
-        return styles.projected;
-      case "planned":
-        return styles.planned;
-      default:
-        return styles.neutral;
-    }
-  };
-
-  // Al cambiar de carrera (simulación): por ahora solo actualiza el título y cierra modal.
-  // Si en el futuro quieres que fetchCourses devuelva datos por carrera, aquí llamas a fetchCourses(codigo).
   const handleSelectCareer = (c: Carrera) => {
     setSelectedCareer(c);
     setModalOpen(false);
-    // posible lugar para recargar cursos: fetchCoursesForCareer(c.codigo) si lo implementas en services/api.ts
   };
+
+  const openCourseModal = (course: Course) => {
+    setSelectedCourse(course);
+  };
+
+  const closeCourseModal = () => {
+    setSelectedCourse(null);
+  };
+
+  // Buscar progreso del curso seleccionado
+  const selectedCourseProgress =
+    selectedCourse && progressData.find((p) => p.course === selectedCourse.codigo);
 
   return (
     <div className={styles.container}>
@@ -80,7 +79,9 @@ export default function CurriculumPage() {
           <h1 className={styles.title}>Malla Curricular</h1>
           <div className={styles.sub}>
             <span className={styles.carreraName}>{selectedCareer.nombre}</span>{" "}
-            <span className={styles.catalogo}>(Catálogo {selectedCareer.catalogo})</span>
+            <span className={styles.catalogo}>
+              (Catálogo {selectedCareer.catalogo})
+            </span>
           </div>
         </div>
 
@@ -95,20 +96,23 @@ export default function CurriculumPage() {
         <div className={styles.loading}>Cargando malla curricular...</div>
       ) : (
         <section className={styles.grid}>
-          {Object.keys(semestres)
+          {Object.keys(niveles)
             .sort((a, b) => Number(a) - Number(b))
             .map((num) => {
-              const cursos = semestres[Number(num)];
+              const cursos = niveles[Number(num)];
               return (
                 <article key={num} className={styles.column}>
-                  <h2 className={styles.semTitle}>Semestre {num}</h2>
+                  <h2 className={styles.semTitle}>Nivel {num}</h2>
                   <div className={styles.courseList}>
                     {cursos.map((c) => (
-                      <div key={c.id} className={`${styles.card} ${statusClass(c.status)}`}>
-                        <div className={styles.courseName}>{c.name}</div>
+                      <div
+                        key={c.codigo}
+                        className={styles.card}
+                        onClick={() => openCourseModal(c)}
+                      >
+                        <div className={styles.courseName}>{c.asignatura}</div>
                         <div className={styles.meta}>
-                          <span>{c.creditos ?? ""}</span>
-                          <span className={styles.year}>{c.year}</span>
+                          <span>{c.creditos} créditos</span>
                         </div>
                       </div>
                     ))}
@@ -125,6 +129,14 @@ export default function CurriculumPage() {
           selectedCareer={selectedCareer}
           onSelectCareer={handleSelectCareer}
           onClose={() => setModalOpen(false)}
+        />
+      )}
+
+      {selectedCourse && (
+        <CourseModal
+          course={selectedCourse}
+          courseProgress={selectedCourseProgress}
+          onClose={closeCourseModal}
         />
       )}
     </div>
