@@ -1,37 +1,65 @@
 .card {
-  border-radius: 10px;
-  padding: 20px;
-  font-weight: 500;
-  text-align: center;
-  background-color: var(--card-bg);
-  color: var(--text-color);
-  border-left: 4px solid transparent;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s, background-color 0.3s, color 0.3s;
+  padding: 24px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: #1b1b1b;
+  font-family: "Inter", sans-serif;
 }
 
-/* Efecto hover */
+/* Hover */
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
 }
 
-/* Colores con opacidad suave */
-.approved {
-  background-color: rgba(89, 180, 89, 0.15);
-  border-left-color: #5cb85c;
+/* Título */
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.failed {
-  background-color: rgba(217, 83, 79, 0.15);
-  border-left-color: #d9534f;
+/* Estado */
+.status {
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  width: fit-content;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
-.projected {
-  background-color: rgba(13, 110, 253, 0.15);
-  border-left-color: #0d6efd;
+/* Colores por estado */
+.aprobado {
+  background: #d1f8d6;
+  color: #1e7a2e;   
 }
 
-.planned {
-  background-color: rgba(255, 193, 7, 0.15);
-  border-left-color: #ffc107;
+.reprobado {
+  background: #ffd6d6;
+  color: #b01818;
+}
+
+.cursando {
+  background: #d8e9ff;
+  color: #1a4fa3;
+}
+
+.disponible {
+  background: #dadada;
+  color: #828181;
+}
+
+.disponibleprox {
+  background: #fbc6fb;
+  color: #e600ff;
 }

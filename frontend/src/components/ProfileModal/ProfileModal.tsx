@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ProfileModal.module.css";
-import type { Carrera } from "../../types/Carrera";
+import type { Carrera } from "../../types/Career";
 
 interface Props {
   carreras: Carrera[];

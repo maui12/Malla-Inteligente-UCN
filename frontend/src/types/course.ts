@@ -3,5 +3,5 @@ export interface Course {
   asignatura: string;    
   creditos: number;      
   nivel: number;         
-  prereq: string;        //vienen como string en el endpoint
+  prereq?: string[];        //vienen como string en el endpoint
 }

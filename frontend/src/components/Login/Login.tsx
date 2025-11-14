@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
-import type { Carrera } from "../../types/Carrera";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");

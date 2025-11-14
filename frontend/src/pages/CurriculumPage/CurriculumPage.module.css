@@ -47,6 +47,7 @@
   cursor: pointer;
   font-weight: 600;
 }
+
 .profileButton:hover {
   opacity: 0.95;
 }
@@ -80,28 +81,19 @@
   color: var(--text-color);
 }
 
-/* Course card */
+/* Course list container ONLY */
 .courseList {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.card {
-  padding: 10px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  cursor: default;
-}
+/* IMPORTANT:
+   Removed ".card" styles that were overwriting CourseCard.module.css.
+   Removed status background classes.
+*/
 
-.card:hover {
-  transform: translateY(-3px);
-}
-
-/* Fondo semitransparente detrás del modal */
+/* Modal overlay */
 .overlay {
   position: fixed;
   top: 0;
@@ -115,7 +107,7 @@
   z-index: 999;
 }
 
-/* Cuadro del modal al hacer click en un curso */
+/* Modal */
 .courseModal {
   background: white;
   padding: 20px;
@@ -145,36 +137,6 @@
   cursor: pointer;
 }
 
-/* Soft colored backgrounds with border indicator */
-.approved {
-  background-color: rgba(92, 184, 92, 0.12); /* green soft */
-  border-left: 4px solid #5cb85c;
-  color: var(--text-color);
-}
-
-.failed {
-  background-color: rgba(217, 83, 79, 0.12); /* red soft */
-  border-left: 4px solid #d9534f;
-  color: var(--text-color);
-}
-
-.projected {
-  background-color: rgba(13, 110, 253, 0.12); /* blue soft */
-  border-left: 4px solid #0d6efd;
-  color: var(--text-color);
-}
-
-.planned {
-  background-color: rgba(255, 193, 7, 0.12); /* yellow soft */
-  border-left: 4px solid #ffc107;
-  color: var(--text-color);
-}
-
-.neutral {
-  background-color: rgba(0,0,0,0.04);
-  border-left: 4px solid transparent;
-}
-
 .courseName {
   font-weight: 600;
   font-size: 13px;
@@ -187,8 +149,57 @@
   font-size: 12px;
   opacity: 0.8;
 }
+
 .year {
   margin-left: 8px;
 }
 
 
+.projectionButtons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.buttonBase {
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+
+  color: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+
+  transition: 
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.buttonBase:active {
+  transform: scale(0.95);
+}
+
+.createProjectionBtn {
+  composes: buttonBase;
+  background: linear-gradient(135deg, #6a5af9, #8d77ff);
+}
+
+.createProjectionBtn:hover {
+  background: linear-gradient(135deg, #5a4be8, #7a66f7);
+  box-shadow: 0 10px 26px rgba(90, 75, 232, 0.35);
+}
+
+/* ===== BOTÓN GUARDAR PROYECCIÓN ===== */
+.saveProjectionBtn {
+  composes: buttonBase;
+  background: linear-gradient(135deg, #2ecc71, #48e68b);
+}
+
+.saveProjectionBtn:hover {
+  background: linear-gradient(135deg, #27b863, #3fdc7a);
+  box-shadow: 0 10px 26px rgba(39, 184, 99, 0.35);
+}
