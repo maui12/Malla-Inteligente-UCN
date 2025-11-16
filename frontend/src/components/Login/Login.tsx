@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Login.module.css";
+import Button from "../Buttons/Button";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
@@ -69,7 +70,7 @@ const Login: React.FC = () => {
           required
         />
         {error && <p className={styles.error}>{error}</p>}
-        <button type="submit">Ingresar</button>
+        <Button variant="green" type="submit">Ingresar</Button>
       </form>
     </div>
   );

@@ -1,11 +1,10 @@
-// src/pages/CurriculumPage/CurriculumPage.tsx
 import React, { useEffect, useState } from "react";
-//import { fetchCourses } from "../../services/api";
 import type { Course } from "../../types/Course";
 import type { CourseProgress } from "../../types/CourseProgress";
 import ProfileModal from "../../components/ProfileModal/ProfileModal";
 import CourseModal from "../../components/CourseModal/CourseModal";
 import CourseCard from "../../components/CourseCard/CourseCard";
+import Button from "../../components/Buttons/Button";
 import styles from "./CurriculumPage.module.css";
 import { useLocation } from "react-router-dom";
 import type { Career } from "../../types/Career";
@@ -257,9 +256,9 @@ export default function CurriculumPage() {
           </div>
         </div>
 
-        <button className={styles.profileButton} onClick={() => setModalOpen(true)}>
+        <Button variant="blue" onClick={() => setModalOpen(true)}>
           Perfil
-        </button>
+        </Button>
       </header>
 
       {loading ? (
@@ -310,8 +309,8 @@ export default function CurriculumPage() {
         />
       )}
       <div className={styles.projectionButtons}>
-        <button className={styles.createProjectionBtn}>Crear Proyección</button>
-        <button className={styles.saveProjectionBtn}>Guardar Proyección</button>
+        <Button variant="green">Crear Proyección</Button>
+        <Button variant="blue">Guardar Proyección</Button>
       </div>
     </div>
   );
