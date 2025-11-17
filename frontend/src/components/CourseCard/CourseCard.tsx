@@ -6,7 +6,7 @@ import type { CourseProgress } from "../../types/CourseProgress";
 interface CourseCardProps {
   course: Course;
   courseProgress?: CourseProgress;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export default function CourseCard({ course, courseProgress, onClick }: CourseCardProps) {

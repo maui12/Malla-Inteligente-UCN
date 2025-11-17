@@ -31,19 +31,8 @@
   color: var(--text-color);
 }
 
-.loginBox button {
-  background: var(--accent-color, #007bff);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-
 .loginBox button:hover {
-  background: #005fcc;
+  background: #01904e;
 }
 
 .error {

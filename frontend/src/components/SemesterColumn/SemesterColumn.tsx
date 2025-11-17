@@ -18,7 +18,7 @@ const SemesterColumn: React.FC<Props> = ({ semesterLabel, year, courses }) => {
       </div>
       <div className={styles.courseList}>
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard key={course.codigo} course={course} />
         ))}
       </div>
     </div>
