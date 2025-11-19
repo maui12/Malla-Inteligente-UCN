@@ -54,12 +54,12 @@
   color: #1a4fa3;
 }
 
-.disponible {
+.bloqueado {
   background: #dadada;
   color: #828181;
 }
 
-.disponibleprox {
+.disponible {
   background: #fbc6fb;
   color: #e600ff;
 }

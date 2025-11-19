@@ -8,6 +8,7 @@ import CourseCard from "../../../components/CourseCard/CourseCard";
 import Button from "../../../components/Buttons/Button";
 import styles from "./CurriculumPage.module.css";
 import { useLocation } from "react-router-dom";
+import { fetchCurriculum, fetchCourseDetails } from "../../../api/curriculum.services";
 
 import { sampleCareers, sampleCourses, sampleProgress } from "../../../data/sampleData";
 
@@ -17,16 +18,13 @@ interface LocationState {
 }
 
 
-// -----------------------------------------
-// Determinar estado de cada curso
-// -----------------------------------------
 
 type CourseStatus =
   | "completed"
   | "failed"
   | "in-progress"
-  | "available-next-semester"
-  | "not-started";
+  | "available"
+  | "blocked";
 
 function getCourseStatus(course: Course, progress: CourseProgress[]): CourseStatus {
   const p = progress.find((x) => x.course === course.codigo);
@@ -45,10 +43,10 @@ function getCourseStatus(course: Course, progress: CourseProgress[]): CourseStat
   );
 
   if (allPrereqsApproved && prereqList.length > 0) {
-    return "available-next-semester";
+    return "available";            // antes: available-next-semester
   }
 
-  return "not-started";
+  return "blocked";   
 }
 
 // -----------------------------------------
@@ -75,14 +73,9 @@ useEffect(() => {
     async function loadData() {
       setLoading(true);
       try {
-        /*
-          Revisar cuando el backend esté listo, por ahora sigue
-          con los datos de prueba de data/sampleData  
-        */
 
-
-        // const curriculum = await fetchCurriculum(selectedCareer.codigo);
-        // setCourses(curriculum.courses);
+        //const curriculum = await fetchCurriculum(selectedCareer.codigo);
+        //setCourses(curriculum.courses);
 
         // const token = localStorage.getItem("token")!;
         // const progress = await fetchMyProgress(token);

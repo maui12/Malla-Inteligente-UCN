@@ -17,9 +17,9 @@ export default function CourseCard({ course, courseProgress, onClick }: CourseCa
     APROBADO: styles.aprobado,
     REPROBADO: styles.reprobado,
     CURSANDO: styles.cursando,
-    "DISPONIBLE PROXIMO SEMESTRE": styles.disponibleprox,
-    DISPONIBLE: styles.disponible
-  }[status] ?? styles.disponible;
+    DISPONIBLE: styles.disponible,   // rosa
+    BLOQUEADO: styles.bloqueado 
+  }[status] ?? styles.bloqueado;
 
   
   return (
