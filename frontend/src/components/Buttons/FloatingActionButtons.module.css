@@ -1,0 +1,53 @@
+.container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1000;
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Posiciones disponibles */
+.bottom-left {
+  bottom: 24px;
+  left: 24px;
+}
+
+.bottom-right {
+  bottom: 24px;
+  right: 24px;
+}
+
+.top-left {
+  top: 24px;
+  left: 24px;
+}
+
+.top-right {
+  top: 24px;
+  right: 24px;
+}
+
+/* Animaciones según posición */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-20px, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+/* Responsive: ajustar en móviles */
+@media (max-width: 768px) {
+  .container {
+    bottom: 16px !important;
+    left: 16px !important;
+    right: 16px !important;
+    top: auto !important;
+    flex-direction: row;
+    justify-content: center;
+  }
+}

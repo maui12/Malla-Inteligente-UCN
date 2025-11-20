@@ -6,6 +6,7 @@ import ProfileModal from "../../../components/ProfileModal/ProfileModal";
 import CourseModal from "../../../components/CourseModal/CourseModal";
 import CourseCard from "../../../components/CourseCard/CourseCard";
 import Button from "../../../components/Buttons/Button";
+import FloatingActionButtons from "../../../components/Buttons/FloatingActionButtons";
 import styles from "./CurriculumPage.module.css";
 import { useLocation } from "react-router-dom";
 import { fetchCurriculum, fetchCourseDetails } from "../../../api/curriculum.services";
@@ -95,12 +96,21 @@ useEffect(() => {
 
 
 
-
   const niveles = courses.reduce<Record<number, Course[]>>((acc, c) => {
     if (!acc[c.nivel]) acc[c.nivel] = [];
     acc[c.nivel].push(c);
     return acc;
   }, {});
+
+  // Función para formatear el periodo (202310 -> "2023-1")
+  const formatPeriod = (period: string): string => {
+    if (period.length === 6) {
+      const year = period.substring(0, 4);
+      const semester = period.substring(4, 6) === "10" ? "1" : "2";
+      return `${year}-${semester}`;
+    }
+    return period;
+  };
 
   const handleSelectCareer = (c: Career) => {
     setSelectedCareer(c);
@@ -117,6 +127,21 @@ useEffect(() => {
   const closeCourseModal = () => {
     setSelectedCourse(null);
   };
+
+  const handleCreateProjection = () => {
+    // TODO: Implementar lógica para crear proyección
+    console.log("Crear Proyección");
+  };
+
+  const handleSaveProjection = () => {
+    // TODO: Implementar lógica para guardar proyección
+    console.log("Guardar Proyección");
+  };
+
+  const floatingActions = [
+    { label: "Crear Proyección", variant: "green" as const, onClick: handleCreateProjection },
+    { label: "Ver proyecciones guardadas", variant: "blue" as const, onClick: handleSaveProjection }
+  ];
 
   return (
     <div className={styles.container}>
@@ -145,12 +170,10 @@ useEffect(() => {
             .map((num) => {
               const cursos = niveles[Number(num)];
               return (
-                <article key={num} className={styles.column}>
-                  <h2 className={styles.semTitle}>Nivel {num}</h2>
+                <div key={num} className={styles.nivelGroup}>
+                  <h2 className={styles.nivelTitle}>Nivel {num}</h2>
                   <div className={styles.courseList}>
                     {cursos.map((c) => {
-                      const status = getCourseStatus(c, progressData);
-
                       return (
                         <CourseCard
                           key={c.codigo}
@@ -161,7 +184,7 @@ useEffect(() => {
                       );
                     })}
                   </div>
-                </article>
+                </div>
               );
             })}
         </section>
@@ -183,10 +206,11 @@ useEffect(() => {
           onClose={() => setSelectedCourse(null)}
         />
       )}
-      <div className={styles.projectionButtons}>
-        <Button variant="green">Crear Proyección</Button>
-        <Button variant="blue">Guardar Proyección</Button>
-      </div>
+      
+      <FloatingActionButtons 
+        actions={floatingActions}
+        position="bottom-left"
+      />
     </div>
   );
 }
