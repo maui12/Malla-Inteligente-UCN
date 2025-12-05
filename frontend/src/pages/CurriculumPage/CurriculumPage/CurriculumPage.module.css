@@ -48,10 +48,10 @@
   color: var(--text-muted);
 }
 
-/* Grid con 2 columnas */
+/* Grid con columnas variables*/
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
   margin-bottom: 24px;
 }
@@ -61,7 +61,7 @@
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   color: var(--text-color);
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -83,13 +83,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-/* Responsive: 1 columna en pantallas pequeñas */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .nivelGroup {
@@ -120,3 +113,9 @@
   border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
 
+/* Responsive*/
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

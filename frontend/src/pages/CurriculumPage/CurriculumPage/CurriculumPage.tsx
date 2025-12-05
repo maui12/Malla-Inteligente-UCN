@@ -8,17 +8,15 @@ import CourseCard from "../../../components/CourseCard/CourseCard";
 import Button from "../../../components/Buttons/Button";
 import FloatingActionButtons from "../../../components/Buttons/FloatingActionButtons";
 import styles from "./CurriculumPage.module.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fetchCurriculum, fetchCourseDetails } from "../../../api/curriculum.services";
 
 import { sampleCareers, sampleCourses, sampleProgress } from "../../../data/sampleData";
 
 interface LocationState {
-  rut?: string;
+  rut: string;
   carreras?: Career[];
 }
-
-
 
 type CourseStatus =
   | "completed"
@@ -36,15 +34,14 @@ function getCourseStatus(course: Course, progress: CourseProgress[]): CourseStat
     if (p.status === "CURSANDO") return "in-progress";
   }
 
- const prereqList = course.prereq ?? []; // si es undefined → []
+ const prereqList = course.prereq ?? []; 
 
-  // Verifica que *todos* los prerequisitos estén aprobados
   const allPrereqsApproved = prereqList.every((code) =>
     progress.some((p) => p.course === code && p.status === "APROBADO")
   );
 
   if (allPrereqsApproved && prereqList.length > 0) {
-    return "available";            // antes: available-next-semester
+    return "available";            
   }
 
   return "blocked";   
@@ -67,6 +64,7 @@ export default function CurriculumPage() {
   const [selectedCareer, setSelectedCareer] = useState<Career>(carreras[0]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [progressData, setProgressData] = useState<CourseProgress[]>(sampleProgress);
+  const navigate = useNavigate();
 
 
 
@@ -102,16 +100,6 @@ useEffect(() => {
     return acc;
   }, {});
 
-  // Función para formatear el periodo (202310 -> "2023-1")
-  const formatPeriod = (period: string): string => {
-    if (period.length === 6) {
-      const year = period.substring(0, 4);
-      const semester = period.substring(4, 6) === "10" ? "1" : "2";
-      return `${year}-${semester}`;
-    }
-    return period;
-  };
-
   const handleSelectCareer = (c: Career) => {
     setSelectedCareer(c);
     setModalOpen(false);
@@ -124,13 +112,11 @@ useEffect(() => {
     setSelectedCourse(course);
   };
 
-  const closeCourseModal = () => {
-    setSelectedCourse(null);
-  };
 
   const handleCreateProjection = () => {
-    // TODO: Implementar lógica para crear proyección
-    console.log("Crear Proyección");
+    navigate(`/malla/crear_proyeccion/1/${selectedCareer.codigo}`)  //CAMBIAR
+      //${rut}/${carrera.codigo}`)
+
   };
 
   const handleSaveProjection = () => {
@@ -144,10 +130,10 @@ useEffect(() => {
   ];
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} role="main" aria-labelledby="page-title">
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Malla Curricular</h1>
+          <h1 id="page-title" className={styles.title}>Malla Curricular</h1>
           <div className={styles.sub}>
             <span className={styles.carreraName}>{selectedCareer.nombre}</span>{" "}
             <span className={styles.catalogo}>
@@ -156,8 +142,12 @@ useEffect(() => {
           </div>
         </div>
 
-        <Button variant="blue" onClick={() => setModalOpen(true)}>
-          Perfil
+        <Button variant="blue" 
+          aria-haspopup="dialog"
+          aria-expanded={modalOpen}
+          aria-controls={modalOpen ? "profile-modal" : undefined}
+          onClick={() => setModalOpen(true)}>
+            Perfil
         </Button>
       </header>
 

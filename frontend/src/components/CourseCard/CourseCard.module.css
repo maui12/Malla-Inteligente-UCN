@@ -1,7 +1,8 @@
 .card {
   padding: 20px;
-  border-radius: 16px;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 13px;
+  margin: 4px;
+  border: 3px solid rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   display: flex;
@@ -13,7 +14,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/*Efecto de brillo sutil en la parte superior */
 .card::before {
   content: '';
   position: absolute;
@@ -36,7 +36,6 @@
   opacity: 1;
 }
 
-/*Título  */
 .cardTitle {
   font-size: 1.15rem;
   font-weight: 700;
@@ -45,7 +44,6 @@
   letter-spacing: -0.02em;
 }
 
-/* Información adicional */
 .card > div:not(.cardTitle):not(.status) {
   font-size: 0.9rem;
   display: flex;
@@ -77,7 +75,6 @@
   border: 1.5px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Card APROBADO - Verde */
 .card:has(.aprobado) {
   background: linear-gradient(135deg, #d1f8d6 0%, #e8fce9 100%);
   color: #1e7a2e;
@@ -90,7 +87,6 @@
   border-color: #388e3c;
 }
 
-/* Card REPROBADO - Rojo */
 .card:has(.reprobado) {
   background: linear-gradient(135deg, #ffd6d6 0%, #ffe6e6 100%);
   color: #b01818;
@@ -103,7 +99,6 @@
   border-color: #c62828;
 }
 
-/* Card CURSANDO - Azul */
 .card:has(.cursando) {
   background: linear-gradient(135deg, #d8e9ff 0%, #e8f2ff 100%);
   color: #1a4fa3;
@@ -116,7 +111,6 @@
   border-color: #1976d2;
 }
 
-/* Card BLOQUEADO - Gris */
 .card:has(.bloqueado) {
   background: linear-gradient(135deg, #e8e8e8 0%, #f2f2f2 100%);
   color: #5a5a5a;
@@ -129,7 +123,6 @@
   border-color: #757575;
 }
 
-/* Card DISPONIBLE - Rosa/Morado */
 .card:has(.disponible) {
   background: linear-gradient(135deg, #fbc6fb 0%, #fde0fd 100%);
   color: #a000a0;
