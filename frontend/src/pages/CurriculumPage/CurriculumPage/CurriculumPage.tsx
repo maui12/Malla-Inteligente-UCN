@@ -9,6 +9,7 @@ import Button from "../../../components/Buttons/Button";
 import FloatingActionButtons from "../../../components/Buttons/FloatingActionButtons";
 import styles from "./CurriculumPage.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "../../../context/UserContext";
 import { fetchCurriculum, fetchCourseDetails } from "../../../api/curriculum.services";
 
 import { sampleCareers, sampleCourses, sampleProgress } from "../../../data/sampleData";
@@ -54,6 +55,7 @@ function getCourseStatus(course: Course, progress: CourseProgress[]): CourseStat
 export default function CurriculumPage() {
   const location = useLocation();
   const state = (location.state || {}) as LocationState;
+  const { user } = useUser();
 
   const carreras =
     state.carreras && state.carreras.length > 0 ? state.carreras : sampleCareers;
@@ -137,7 +139,7 @@ useEffect(() => {
           <div className={styles.sub}>
             <span className={styles.carreraName}>{selectedCareer.nombre}</span>{" "}
             <span className={styles.catalogo}>
-              (Catálogo {selectedCareer.catalogo})
+              (Catálogo {selectedCareer.catalogo} {user?.email})
             </span>
           </div>
         </div>

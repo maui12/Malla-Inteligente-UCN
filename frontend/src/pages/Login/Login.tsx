@@ -4,12 +4,14 @@ import Button from "../../components/Buttons/Button";
 import { useNavigate } from "react-router-dom";
 import { sampleStudents } from "../../data/sampleData";
 import type { Student } from "../../types/Student";
+import { useUser } from "../../context/UserContext";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [students, setStudents] = useState<Student[]>([]); // data cargada
   const [error, setError] = useState("");
+  const { setUser } = useUser();
   const navigate = useNavigate();
 
 
@@ -43,6 +45,8 @@ const Login: React.FC = () => {
       return;
     }
 
+    setUser(user);
+
     // Redirección según cantidad de carreras
     if (user.carreras && user.carreras.length > 1) {
       const carrera = user.carreras[0];
@@ -61,12 +65,25 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <form className={styles.loginBox} onSubmit={handleLogin}>
-        <h2>Iniciar sesión</h2>
 
+      <div className={styles.titleWrapper}>
+        <h1 className={styles.title}>Malla UCN</h1>
+        <div className={styles.titleBar}></div>
+      </div>
+
+      <form
+        className={styles.loginBox}
+        onSubmit={handleLogin}
+        aria-labelledby="login-title"
+      >
+        <h2 id="login-title">Iniciar sesión</h2>  
         <input
           type="email"
           placeholder="Correo electrónico"
+          aria-label="Correo electrónico"
+          aria-required="true"
+          aria-invalid={!!error}
+          aria-describedby={error ? "login-error" : undefined}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -75,12 +92,25 @@ const Login: React.FC = () => {
         <input
           type="password"
           placeholder="Contraseña"
+          aria-label="Contraseña"
+          aria-required="true"
+          aria-invalid={!!error}
+          aria-describedby={error ? "login-error" : undefined}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && (
+          <p
+            id="login-error"
+            className={styles.error}
+            role="alert"
+            aria-live="assertive"
+          >
+            {error}
+          </p>
+        )}
 
         <Button variant="green" type="submit">
           Ingresar
