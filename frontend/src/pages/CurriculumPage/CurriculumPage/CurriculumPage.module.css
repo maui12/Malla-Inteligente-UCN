@@ -51,7 +51,7 @@
 /* Grid con columnas variables*/
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr); /*cambiar numero de semestres por fila */
   gap: 20px;
   margin-bottom: 24px;
 }
