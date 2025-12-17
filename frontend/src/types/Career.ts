@@ -1,8 +1,12 @@
-import type { Course } from "./Course";
+import type { Course } from "./course";
 
 export interface Career {
-  codigo: string;     // "8266"
-  nombre: string;     // "ITI"
-  courses: Record<string, Course>;
-  catalogo: string;   // "202410"
+  codigo: string;
+  nombre: string;
+  catalogo: number;
+}
+
+export interface CurriculumResponse {
+  careerCode: string;
+  courses: Map<string, Course>;
 }

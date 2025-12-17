@@ -1,37 +1,45 @@
-import React from "react";
-import styles from "./CourseCard.module.css";
-import type { Course } from "../../types/Course";
-import type { CourseProgress } from "../../types/CourseProgress";
+import React from 'react';
+import type { Course } from '../../types/course';
+import type { CourseProgress } from '../../types/CourseProgress';
+import styles from './CourseCard.module.css';
 
 interface CourseCardProps {
   course: Course;
   courseProgress?: CourseProgress;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
-export default function CourseCard({ course, courseProgress, onClick }: CourseCardProps) {
-  const status = courseProgress?.status ?? "DISPONIBLE";
+const CourseCard: React.FC<CourseCardProps> = ({ 
+  course, 
+  courseProgress, 
+  onClick 
+}) => {
+  const getStatusClass = () => {
+    if (!courseProgress) return styles.available;
+    if (courseProgress.status === 'approved') return styles.completed;
+    if (courseProgress.status === 'failed') return styles.failed;
+    return styles.available;
+  };
 
-  // Mapear estado → clase CSS
-  const statusClass = {
-    APROBADO: styles.aprobado,
-    REPROBADO: styles.reprobado,
-    CURSANDO: styles.cursando,
-    DISPONIBLE: styles.disponible,   // rosa
-    BLOQUEADO: styles.bloqueado 
-  }[status] ?? styles.bloqueado;
-
-  
   return (
-    <div className={styles.card} onClick={onClick}>
-      <div className={styles.cardTitle}>{course.asignatura}</div>
-
-      <div className={`${styles.status} ${statusClass}`}>
-        {status}
-      </div>
-
-      <div><strong>Código:</strong> {course.codigo}</div>
-      <div><strong>Créditos:</strong> {course.creditos}</div>
+    <div 
+      className={`${styles.card} ${getStatusClass()}`}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+    >
+      <div className={styles.code}>{course.code}</div>
+      <div className={styles.name}>{course.name}</div>
+      <div className={styles.credits}>{course.credits} créditos</div>
+      
+      {courseProgress && (
+        <div className={styles.status}>
+          {courseProgress.status === 'approved' && '✓ Aprobado'}
+          {courseProgress.status === 'failed' && '✗ Reprobado'}
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default CourseCard;

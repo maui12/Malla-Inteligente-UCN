@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import Login from './pages/Login/Login';
-import MallaPage from './pages/CurriculumPage/CurriculumPage/CurriculumPage'; 
+import CurriculumPage from './pages/CurriculumPage/CurriculumPage/CurriculumPage'; 
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
             path="/malla/:userId/:careerCode/:catalogYear"
             element={
               <ProtectedRoute>
-                <MallaPage />
+                <CurriculumPage />
               </ProtectedRoute>
             }
           />

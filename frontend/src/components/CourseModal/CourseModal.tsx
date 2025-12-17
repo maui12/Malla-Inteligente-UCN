@@ -1,52 +1,59 @@
-// src/components/CourseModal/CourseModal.tsx
-import React from "react";
-import styles from "./CourseModal.module.css";
-import type { Course } from "../../types/Course";
-import type { CourseProgress } from "../../types/CourseProgress";
+import React from 'react';
+import type { Course } from '../../types/course';
+import type { CourseProgress } from '../../types/CourseProgress';
+import styles from './CourseModal.module.css';
+import Button from '../Buttons/Button';
 
 interface CourseModalProps {
   course: Course;
-  courseProgress?: CourseProgress | null; // ahora opcional
+  courseProgress?: CourseProgress;
   onClose: () => void;
 }
 
-export default function CourseModal({
-  course,
-  courseProgress,
-  onClose,
-}: CourseModalProps) {
-  const handleOverlayClick = () => {
-    onClose();
-  };
-
-  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-  };
-
+const CourseModal: React.FC<CourseModalProps> = ({ 
+  course, 
+  courseProgress, 
+  onClose 
+}) => {
   return (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.modal} onClick={handleModalClick}>
-        <h2>{course.asignatura}</h2>
-        <p><strong>Código Curso:</strong> {course.codigo}</p>
-
-        {!courseProgress ? (
-          <p className={styles.noProgress}>
-            ⚠️ No hay información de progreso disponible para este curso.
-          </p>
-        ) : (
-          <div className={styles.infoSection}>
-            <p><strong>NRC:</strong> {courseProgress.nrc ?? "—"}</p>
-            <p><strong>Período:</strong> {courseProgress.period ?? "—"}</p>
-            <p><strong>Inscripción:</strong> {courseProgress.inscriptionType ?? "—"}</p>
-            <p><strong>Estado:</strong> {courseProgress.status ?? "—"}</p>
-            <p><strong>Excluido:</strong> {courseProgress.excluded ? "Sí" : "No"}</p>
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.closeButton} onClick={onClose}>×</button>
+        
+        <h2>{course.name}</h2>
+        <p className={styles.code}>Código: {course.code}</p>
+        <p>Créditos: {course.credits}</p>
+        
+        {course.recommendedSemester && (
+          <p>Semestre recomendado: {course.recommendedSemester}</p>
+        )}
+        
+        {course.prerequisites && course.prerequisites.length > 0 && (
+          <div className={styles.prerequisites}>
+            <h3>Prerequisitos:</h3>
+            <ul>
+              {course.prerequisites.map((prereq) => (
+                <li key={prereq}>{prereq}</li>
+              ))}
+            </ul>
           </div>
         )}
-
-        <button className={styles.closeButton} onClick={onClose}>
+        
+        {courseProgress && (
+          <div className={styles.progress}>
+            <h3>Tu progreso:</h3>
+            <p>Estado: {courseProgress.status === 'approved' ? 'Aprobado' : 'Reprobado'}</p>
+            <p>Año: {courseProgress.year}</p>
+            <p>Período: {courseProgress.period}</p>
+          </div>
+        )}
+        
+        <Button variant="blue" onClick={onClose}>
           Cerrar
-        </button>
+        </Button>
       </div>
     </div>
   );
-}
+};
+
+export default CourseModal;

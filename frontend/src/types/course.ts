@@ -1,7 +1,10 @@
+export type SemesterPeriod = 'S1' | 'S2' | 'I' | 'V';
+
 export interface Course {
-  codigo: string;        
-  asignatura: string;    
-  creditos: number;      
-  nivel: number;         
-  prereq?: string[];        //vienen como string en el endpoint
+  code: string;
+  name: string;
+  credits: number;
+  prerequisites: string[];
+  recommendedSemester?: number;
+  period?: SemesterPeriod;
 }

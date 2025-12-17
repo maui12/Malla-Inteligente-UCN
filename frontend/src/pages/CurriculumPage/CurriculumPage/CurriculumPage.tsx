@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type { Course } from "../../../types/Course";
+import type { Course } from "../../../types/course";
 import type { Career } from "../../../types/Career";
 import type { CourseProgress } from "../../../types/CourseProgress";
 import ProfileModal from "../../../components/ProfileModal/ProfileModal";
@@ -8,16 +8,12 @@ import CourseCard from "../../../components/CourseCard/CourseCard";
 import Button from "../../../components/Buttons/Button";
 import FloatingActionButtons from "../../../components/Buttons/FloatingActionButtons";
 import styles from "./CurriculumPage.module.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
-import { fetchCurriculum, fetchCourseDetails } from "../../../api/curriculum.services";
-
-import { sampleCareers, sampleCourses, sampleProgress } from "../../../data/sampleData";
-
-interface LocationState {
-  rut: string;
-  carreras?: Career[];
-}
+import { 
+  fetchCurriculum, 
+  fetchMyProgress 
+} from "../../../api/curriculum.services";
 
 type CourseStatus =
   | "completed"
@@ -26,135 +22,188 @@ type CourseStatus =
   | "available"
   | "blocked";
 
+/**
+ * Determina el estado de un curso basado en el progreso del estudiante
+ */
 function getCourseStatus(course: Course, progress: CourseProgress[]): CourseStatus {
-  const p = progress.find((x) => x.course === course.codigo);
+  // Verificar si el curso ya fue cursado
+  const courseProgress = progress.find((p) => p.courseCode === course.code);
 
-  if (p) {
-    if (p.status === "APROBADO") return "completed";
-    if (p.status === "REPROBADO") return "failed";
-    if (p.status === "CURSANDO") return "in-progress";
+  if (courseProgress) {
+    if (courseProgress.status === "approved") return "completed";
+    if (courseProgress.status === "failed") return "failed";
   }
 
- const prereqList = course.prereq ?? []; 
+  // Verificar prerequisitos
+  const prereqList = course.prerequisites ?? [];
+
+  if (prereqList.length === 0) {
+    // Sin prerequisitos = disponible
+    return "available";
+  }
 
   const allPrereqsApproved = prereqList.every((code) =>
-    progress.some((p) => p.course === code && p.status === "APROBADO")
+    progress.some((p) => p.courseCode === code && p.status === "approved")
   );
 
-  if (allPrereqsApproved && prereqList.length > 0) {
-    return "available";            
+  if (allPrereqsApproved) {
+    return "available";
   }
 
-  return "blocked";   
+  return "blocked";
 }
 
-// -----------------------------------------
-// Componente principal
-// -----------------------------------------
-
 export default function CurriculumPage() {
-  const location = useLocation();
-  const state = (location.state || {}) as LocationState;
+  const { userId, careerCode, catalogYear } = useParams<{
+    userId: string;
+    careerCode: string;
+    catalogYear: string;
+  }>();
+
   const { user } = useUser();
-
-  const carreras =
-    state.carreras && state.carreras.length > 0 ? state.carreras : sampleCareers;
-
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedCareer, setSelectedCareer] = useState<Career>(carreras[0]);
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [progressData, setProgressData] = useState<CourseProgress[]>(sampleProgress);
   const navigate = useNavigate();
 
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [progressData, setProgressData] = useState<CourseProgress[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
+  // Career basada en los parámetros de la URL
+  const [selectedCareer] = useState<Career>({
+    codigo: careerCode || '',
+    nombre: getCareerName(careerCode || ''),
+    catalogo: parseInt(catalogYear || '0'),
+  });
 
-useEffect(() => {
+  useEffect(() => {
     async function loadData() {
+      if (!careerCode) {
+        setError('Código de carrera no especificado');
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
+      setError(null);
+
       try {
+        // Cargar cursos de la malla curricular
+        const curriculumData = await fetchCurriculum(careerCode);
+        
+        // Convertir el objeto Record a array
+        const coursesArray = Object.values(curriculumData.courses);
+        setCourses(coursesArray);
 
-        //const curriculum = await fetchCurriculum(selectedCareer.codigo);
-        //setCourses(curriculum.courses);
+        // Cargar progreso del estudiante
+        const progress = await fetchMyProgress();
+        setProgressData(progress);
 
-        // const token = localStorage.getItem("token")!;
-        // const progress = await fetchMyProgress(token);
-        // setProgressData(progress);
-
-        // Por ahora seguimos usando datos locales:
-        setCourses(sampleCourses);
-        setProgressData(sampleProgress);
-      } catch (err) {
-        console.error("Error cargando backend:", err);
+      } catch (err: any) {
+        console.error("Error cargando datos:", err);
+        
+        if (err.response?.status === 404) {
+          setError('Malla curricular no encontrada para esta carrera');
+        } else if (err.response?.status === 401) {
+          setError('Sesión expirada. Por favor inicia sesión nuevamente.');
+          setTimeout(() => navigate('/login'), 2000);
+        } else {
+          setError(
+            err.response?.data?.message || 
+            'Error al cargar la información. Intenta nuevamente.'
+          );
+        }
       } finally {
         setLoading(false);
       }
     }
+
     loadData();
-  }, [selectedCareer]);
+  }, [careerCode, navigate]);
 
-
-
+  // Agrupar cursos por nivel/semestre recomendado
   const niveles = courses.reduce<Record<number, Course[]>>((acc, c) => {
-    if (!acc[c.nivel]) acc[c.nivel] = [];
-    acc[c.nivel].push(c);
+    const nivel = c.recommendedSemester ?? 0;
+    if (!acc[nivel]) acc[nivel] = [];
+    acc[nivel].push(c);
     return acc;
   }, {});
 
-  const handleSelectCareer = (c: Career) => {
-    setSelectedCareer(c);
-    setModalOpen(false);
-  };
-
   const selectedCourseProgress =
-    selectedCourse && progressData.find((p) => p.course === selectedCourse.codigo);
-  
+    selectedCourse && progressData.find((p) => p.courseCode === selectedCourse.code);
+
   const openCourseModal = (course: Course) => {
     setSelectedCourse(course);
   };
 
-
   const handleCreateProjection = () => {
-    navigate(`/malla/crear_proyeccion/1/${selectedCareer.codigo}`)  //CAMBIAR
-      //${rut}/${carrera.codigo}`)
-
+    navigate(`/malla/crear_proyeccion/${userId}/${selectedCareer.codigo}`);
   };
 
   const handleSaveProjection = () => {
-    // TODO: Implementar lógica para guardar proyección
-    console.log("Guardar Proyección");
+    navigate(`/proyecciones/${userId}`);
   };
 
   const floatingActions = [
-    { label: "Crear Proyección", variant: "green" as const, onClick: handleCreateProjection },
-    { label: "Ver proyecciones guardadas", variant: "blue" as const, onClick: handleSaveProjection }
+    { 
+      label: "Crear Proyección", 
+      variant: "green" as const, 
+      onClick: handleCreateProjection 
+    },
+    { 
+      label: "Ver proyecciones guardadas", 
+      variant: "blue" as const, 
+      onClick: handleSaveProjection 
+    }
   ];
+
+  // Manejo de errores
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.errorContainer}>
+          <h2>Error</h2>
+          <p>{error}</p>
+          <Button variant="blue" onClick={() => navigate('/login')}>
+            Volver al inicio
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container} role="main" aria-labelledby="page-title">
       <header className={styles.header}>
         <div>
-          <h1 id="page-title" className={styles.title}>Malla Curricular</h1>
+          <h1 id="page-title" className={styles.title}>
+            Malla Curricular
+          </h1>
           <div className={styles.sub}>
-            <span className={styles.carreraName}>{selectedCareer.nombre}</span>{" "}
+            <span className={styles.carreraName}>
+              {selectedCareer.nombre}
+            </span>{" "}
             <span className={styles.catalogo}>
-              (Catálogo {selectedCareer.catalogo} {user?.email})
+              (Catálogo {selectedCareer.catalogo} - {user?.email})
             </span>
           </div>
         </div>
 
-        <Button variant="blue" 
+        <Button
+          variant="blue"
           aria-haspopup="dialog"
           aria-expanded={modalOpen}
-          aria-controls={modalOpen ? "profile-modal" : undefined}
-          onClick={() => setModalOpen(true)}>
-            Perfil
+          onClick={() => setModalOpen(true)}
+        >
+          Perfil
         </Button>
       </header>
 
       {loading ? (
-        <div className={styles.loading}>Cargando malla curricular...</div>
+        <div className={styles.loading}>
+          Cargando malla curricular...
+        </div>
       ) : (
         <section className={styles.grid}>
           {Object.keys(niveles)
@@ -163,14 +212,20 @@ useEffect(() => {
               const cursos = niveles[Number(num)];
               return (
                 <div key={num} className={styles.nivelGroup}>
-                  <h2 className={styles.nivelTitle}>Nivel {num}</h2>
+                  <h2 className={styles.nivelTitle}>
+                    {Number(num) === 0 ? 'Sin Nivel Asignado' : `Nivel ${num}`}
+                  </h2>
                   <div className={styles.courseList}>
                     {cursos.map((c) => {
+                      const progress = progressData.find(
+                        (p) => p.courseCode === c.code
+                      );
+                      
                       return (
                         <CourseCard
-                          key={c.codigo}
+                          key={c.code}
                           course={c}
-                          courseProgress={progressData.find((p) => p.course === c.codigo)}
+                          courseProgress={progress}
                           onClick={() => openCourseModal(c)}
                         />
                       );
@@ -184,9 +239,9 @@ useEffect(() => {
 
       {modalOpen && (
         <ProfileModal
-          carreras={carreras}
+          carreras={[selectedCareer]}
           selectedCareer={selectedCareer}
-          onSelectCareer={handleSelectCareer}
+          onSelectCareer={() => {}}
           onClose={() => setModalOpen(false)}
         />
       )}
@@ -194,15 +249,28 @@ useEffect(() => {
       {selectedCourse && (
         <CourseModal
           course={selectedCourse}
-          courseProgress={selectedCourseProgress}
+          courseProgress={selectedCourseProgress ?? undefined}
           onClose={() => setSelectedCourse(null)}
         />
       )}
-      
-      <FloatingActionButtons 
+
+      <FloatingActionButtons
         actions={floatingActions}
         position="bottom-left"
       />
     </div>
   );
+}
+
+// Helper para obtener nombre de carrera
+function getCareerName(code: string): string {
+  const careers: Record<string, string> = {
+    'ICI': 'Ingeniería Civil Informática',
+    'ICO': 'Ingeniería Civil Industrial',
+    'IME': 'Ingeniería Civil Mecánica',
+    'IEL': 'Ingeniería Civil Eléctrica',
+    'IQU': 'Ingeniería Civil Química',
+    // Agrega más carreras según necesites
+  };
+  return careers[code] || code;
 }
