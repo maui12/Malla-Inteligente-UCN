@@ -15,7 +15,7 @@ import { CoursePreferenceController } from './entities/course-preference.control
     CoursePreferenceService,StudentService
   ],
   controllers: [
-    CoursePreferenceController,StudentService
+    CoursePreferenceController
   ],
   exports: [
     CoursePreferenceService,StudentService

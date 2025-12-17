@@ -59,6 +59,8 @@ export class AuthController {
       email: dto.email,
       name: dto.name,
       careerCode: dto.careerCode,
+      yearOfAdmission: dto.yearOfAdmission,
+      curriculumCatalogYear: dto.curriculumCatalogYear,
       passwordHash: hash,
     });
 

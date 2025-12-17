@@ -1,4 +1,4 @@
-import {IsEmail,IsNotEmpty,IsString,MinLength,MaxLength} from 'class-validator';
+import {IsEmail,IsNotEmpty,IsString, IsNumber,MinLength,MaxLength} from 'class-validator';
 
 export class RegisterDto {
   @IsEmail({}, { message: 'El email debe tener un formato válido' })
@@ -19,4 +19,12 @@ export class RegisterDto {
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
   @MaxLength(50, { message: 'La contraseña no puede exceder 50 caracteres' })
   password: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  yearOfAdmission: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  curriculumCatalogYear: number;
 }

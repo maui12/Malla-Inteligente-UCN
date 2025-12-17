@@ -18,8 +18,14 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
   app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen(3000);
+    console.log('Backend corriendo en http://localhost:3000');
 }
 bootstrap();

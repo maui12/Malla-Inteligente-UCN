@@ -1,21 +1,40 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./pages/Login/Login";
-import CurriculumPage from "./pages/CurriculumPage/CurriculumPage/CurriculumPage";
-import CreateProjectionPage from "./pages/CreateProjectionPage/CreateProjectionPage";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { UserProvider } from './context/UserContext';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import Login from './pages/Login/Login';
+import MallaPage from './pages/CurriculumPage/CurriculumPage/CurriculumPage'; 
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
 
-const App = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route
-          path="/malla/:rut/:codigo/:catalogo"
-          element={<CurriculumPage />}
-        />
-        <Route path="/malla/crear_proyeccion/:rut/:codigo" element={<CreateProjectionPage />} />
-      </Routes>
-    </Router>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          
+          {/* Rutas protegidas */}
+          <Route
+            path="/malla/:userId/:careerCode/:catalogYear"
+            element={
+              <ProtectedRoute>
+                <MallaPage />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Ruta para admins */}
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute requireAdmin>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   );
-};
+}
 
 export default App;
