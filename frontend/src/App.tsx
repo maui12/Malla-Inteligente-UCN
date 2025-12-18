@@ -3,6 +3,7 @@ import { UserProvider } from './context/UserContext';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import Login from './pages/Login/Login';
 import MallaPage from './pages/CurriculumPage/CurriculumPage/CurriculumPage'; 
+import CreateProjectionPage from './pages/CreateProjectionPage/CreateProjectionPage';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
 
 function App() {
@@ -21,7 +22,16 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
+          <Route 
+            path="/proyeccion/:careerCode/:catalogYear" 
+            element={
+              <ProtectedRoute>
+                <CreateProjectionPage />
+              </ProtectedRoute>
+              } 
+            />
+  
           {/* Ruta para admins */}
           <Route
             path="/admin/*"

@@ -19,6 +19,10 @@ export default function CourseModal({
     onClose();
   };
 
+  const prereqList = typeof course.prereq === 'string' 
+    ? (course.prereq as string).split(',').filter(p => p.trim() !== "")
+    : Array.isArray(course.prereq) ? course.prereq : [];
+
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -40,6 +44,16 @@ export default function CourseModal({
             <p><strong>Inscripción:</strong> {courseProgress.inscriptionType ?? "—"}</p>
             <p><strong>Estado:</strong> {courseProgress.status ?? "—"}</p>
             <p><strong>Excluido:</strong> {courseProgress.excluded ? "Sí" : "No"}</p>
+            <div className={styles.prereqSection}>
+              <p><strong>Prerrequisitos:</strong></p>
+              {prereqList.length > 0 ? (
+                <p className={styles.prereqCodes}>
+                  {prereqList.join(", ")}
+                </p>
+              ) : (
+                <p>Ninguno</p>
+              )}
+            </div>
           </div>
         )}
 

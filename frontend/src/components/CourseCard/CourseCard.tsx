@@ -20,16 +20,15 @@ export default function CourseCard({ course, onClick }: CourseCardProps) {
 
   return (
     <div className={styles.card} onClick={onClick}>
-      <div className={styles.cardTitle}>{course.asignatura}</div>
-
-      <div className={`${styles.statusBadge} ${statusClass}`}>
-        {status}
+      <div className={styles.topSection}>
+        <h4 className={styles.cardTitle}>{course.asignatura}</h4>
+        <div className={styles.courseInfo}>
+          {course.codigo} • {course.creditos} Cr.
+        </div>
       </div>
-
-      <div className={styles.details}>
-        <p><strong>Código:</strong> {course.codigo}</p>
-        <p><strong>Créditos:</strong> {course.creditos}</p>
-        {course.period && <p><strong>Periodo:</strong> {course.period}</p>}
+      
+      <div className={`${styles.status} ${statusClass}`}>
+        {status}
       </div>
     </div>
   );

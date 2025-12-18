@@ -1,185 +1,117 @@
+/* CourseCard.module.css */
+
 .card {
-  padding: 20px;
-  border-radius: 13px;
-  margin: 4px;
-  border: 3px solid rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
+  background: #ffffff;
+  margin: 5px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 12px;
-  font-family: "Inter", sans-serif;
+  transition: all 0.2s ease-in-out;
   position: relative;
+  min-height: 120px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
-.card:hover::before {
-  opacity: 1;
+/* El "indicador de estado" es solo una línea sutil a la izquierda */
+.card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: #cbd5e1; /* Gris por defecto */
+  transition: background 0.3s ease;
 }
+
+.card:has(.aprobado)::after { background: #10b981; }
+.card:has(.reprobado)::after { background: #ef4444; }
+.card:has(.cursando)::after { background: #3b82f6; }
 
 .cardTitle {
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.4;
-  margin-bottom: 2px;
-  letter-spacing: -0.02em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.25;
+  margin: 0;
+  padding-left: 8px; 
 }
 
-.card > div:not(.cardTitle):not(.status) {
-  font-size: 0.9rem;
+.courseInfo {
+  padding-left: 8px;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.status {
+  padding-left: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
-  opacity: 0.9;
-}
-
-.card > div strong {
-  font-weight: 600;
-  opacity: 0.75;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Badge de estado */
-.status {
-  margin-top: auto;
-  padding: 2px 0; /* Sin fondo tipo bloque, solo texto y punto */
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none !important; /* Quitamos el fondo que lo hace ver como bloque */
-  border: none !important;      /* Quitamos el borde */
-  box-shadow: none !important;
+  background: transparent !important;
+  border: none !important;
 }
 
-/* El punto de color que da la señal visual */
 .status::before {
   content: '';
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: currentColor;
 }
 
-.card:has(.aprobado) {
-  background: linear-gradient(135deg, #d1f8d6 0%, #e8fce9 100%);
-  color: #1e7a2e;
-  border-color: #9be0a4;
-}
+.aprobado { color: #059669; }
+.reprobado { color: #dc2626; }
+.pendiente { color: #94a3b8; }
+.cursando { color: #2563eb; }
 
-.aprobado {
-  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
-  color: #ffffff;
-  border-color: #388e3c;
+
+.card:has(.aprobado) {
+  background-color: #f0fdf4; 
+  border-color: #dcfce7;
 }
+.card:has(.aprobado)::after { background: #10b981; }
+
 
 .card:has(.reprobado) {
-  background: linear-gradient(135deg, #ffd6d6 0%, #ffe6e6 100%);
-  color: #b01818;
-  border-color: #ffb3b3;
+  background-color: #fef2f2;
+  border-color: #fee2e2;
 }
+.card:has(.reprobado)::after { background: #ef4444; }
 
-.reprobado {
-  background: linear-gradient(135deg, #ef5350 0%, #e57373 100%);
-  color: #ffffff;
-  border-color: #c62828;
-}
 
 .card:has(.cursando) {
-  background: linear-gradient(135deg, #d8e9ff 0%, #e8f2ff 100%);
-  color: #1a4fa3;
-  border-color: #b3d4ff;
+  background-color: #eff6ff;
+  border-color: #dbeafe;
 }
+.card:has(.cursando)::after { background: #3b82f6; }
 
-.cursando {
-  background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%);
-  color: #ffffff;
-  border-color: #1976d2;
-}
-
-.card:has(.bloqueado) {
-  background: linear-gradient(135deg, #e8e8e8 0%, #f2f2f2 100%);
-  color: #5a5a5a;
-  border-color: #c4c4c4;
-}
-
-.bloqueado {
-  background: linear-gradient(135deg, #9e9e9e 0%, #bdbdbd 100%);
-  color: #ffffff;
-  border-color: #757575;
-}
-
-.card:has(.pendiente) {
-  background: linear-gradient(135deg, #f0f0f0 0%, #fafafa 100%);
-  color: #555;
-  border-color: #ddd;
-}
-
-.pendiente {
-  background: linear-gradient(135deg, #9e9e9e 0%, #bdbdbd 100%);
-  color: #ffffff;
-  border-color: #757575;
-}
 
 .card:has(.disponible) {
-  background: linear-gradient(135deg, #fbc6fb 0%, #fde0fd 100%);
-  color: #a000a0;
-  border-color: #f0a0f0;
+  background-color: #f5f3ff;
+  border-color: #ede9fe;
 }
+.card:has(.disponible)::after { background: #a855f7; }
 
-.disponible {
-  background: linear-gradient(135deg, #e040fb 0%, #ea80fc 100%);
-  color: #ffffff;
-  border-color: #aa00ff;
-}
 
-/* Animación suave al aparecer */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card {
-  animation: fadeIn 0.4s ease-out;
-}
-
-/* Responsive*/
-@media (max-width: 768px) {
-  .card {
-    padding: 16px;
-  }
-  
-  .cardTitle {
-    font-size: 1rem;
-  }
+.card:has(.pendiente) {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
 }
