@@ -34,10 +34,10 @@ export class ExternalApiService {
 
   async getFullStudentData(loginDto: LoginDto) {
     
-  
     const loginUrl = `${this.puclaroApiBaseUrl}/login.php?email=${loginDto.email}&password=${loginDto.password}`;
-    
     const loginData = await this.fetchApi<LoginResponse>(loginUrl, 'Login');
+
+    this.logger.log(`Respuesta UCN: ${JSON.stringify(loginData)}`);
     
     if (!loginData || !loginData.rut) {
       throw new UnauthorizedException('Email o contraseña inválidos');
@@ -49,29 +49,40 @@ export class ExternalApiService {
 
     const carrerasConDatos = await Promise.all(
       carreras.map(async (carrera) => {
-        
-       
-        const malla = await this.fetchMalla(carrera.codigo, carrera.catalogo);
-        
-      
-        const avance = await this.fetchAvance(rut, carrera.codigo);
+        // 1. Obtenemos ambos datos en paralelo
+        const [mallaOriginal, avance] = await Promise.all([
+          this.fetchMalla(carrera.codigo, carrera.catalogo),
+          this.fetchAvance(rut, carrera.codigo)
+        ]);
 
-        
+        // 2. CRUCE DE DATOS: Inyectamos el estado del avance en cada ramo de la malla
+        const mallaConProgreso = mallaOriginal.map((ramoMalla) => {
+          //Buscamos si el estudiante tiene este ramo en su avance
+          const registroAvance = Array.isArray(avance) 
+            ? avance.find((a) => a.course === ramoMalla.codigo)
+            : null;
+
+          return {
+            ...ramoMalla,
+            //Si lo encontramos, usamos su status real, si no, es PENDIENTE
+            status: registroAvance ? registroAvance.status : 'PENDIENTE',
+            period: registroAvance ? registroAvance.period : null,
+            nrc: registroAvance ? registroAvance.nrc : null,
+          };
+        });
+
         return {
           ...carrera,
-          malla,
-          avance,
+          malla: mallaConProgreso,
         };
       }),
     );
 
-   
     return {
       rut,
       carreras: carrerasConDatos,
     };
   }
-
  
   private async fetchApi<T>(url: string, operation: string, headers: object = {}): Promise<T> {
     this.logger.log(`Llamando API [${operation}]: ${url}`);

@@ -1,37 +1,36 @@
 import React from "react";
 import styles from "./CourseCard.module.css";
 import type { Course } from "../../types/Course";
-import type { CourseProgress } from "../../types/CourseProgress";
 
 interface CourseCardProps {
   course: Course;
-  courseProgress?: CourseProgress;
   onClick?: () => void;
 }
 
-export default function CourseCard({ course, courseProgress, onClick }: CourseCardProps) {
-  const status = courseProgress?.status ?? "DISPONIBLE";
+export default function CourseCard({ course, onClick }: CourseCardProps) {
+  const status = course.status ?? "PENDIENTE";
 
-  // Mapear estado → clase CSS
   const statusClass = {
     APROBADO: styles.aprobado,
     REPROBADO: styles.reprobado,
+    PENDIENTE: styles.pendiente,
     CURSANDO: styles.cursando,
-    DISPONIBLE: styles.disponible,   // rosa
-    BLOQUEADO: styles.bloqueado 
-  }[status] ?? styles.bloqueado;
+    DISPONIBLE: styles.disponible,
+  }[status] || styles.pendiente;
 
-  
   return (
     <div className={styles.card} onClick={onClick}>
       <div className={styles.cardTitle}>{course.asignatura}</div>
 
-      <div className={`${styles.status} ${statusClass}`}>
+      <div className={`${styles.statusBadge} ${statusClass}`}>
         {status}
       </div>
 
-      <div><strong>Código:</strong> {course.codigo}</div>
-      <div><strong>Créditos:</strong> {course.creditos}</div>
+      <div className={styles.details}>
+        <p><strong>Código:</strong> {course.codigo}</p>
+        <p><strong>Créditos:</strong> {course.creditos}</p>
+        {course.period && <p><strong>Periodo:</strong> {course.period}</p>}
+      </div>
     </div>
   );
 }

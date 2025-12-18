@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import { authService } from "../../services/auth.services";
 import type { LoginRequest } from "../../types/Auth";
+import type { User } from "../../types/Auth";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -21,31 +22,37 @@ const Login: React.FC = () => {
 
     try {
       const credentials: LoginRequest = { email, password };
-      const response = await authService.login(credentials);
       
-      setUser(response.user);
+      const response = await authService.login(credentials) as any; // Usamos any temporalmente para saltar el bloqueo
+      const userData = response.user as User;
+      setUser(userData);
 
+      // 1. Redirección para Administradores
       if (response.user.role === 'admin') {
         navigate('/admin/dashboard');
         return;
       }
 
-      if (response.user.careerCode && response.user.curriculumCatalogYear) {
+      if (response.user.carreras && response.user.carreras.length > 0) {
+        const carreraPrincipal = response.user.carreras[0];
+        
         navigate(
-          `/malla/${response.user.id}/${response.user.careerCode}/${response.user.curriculumCatalogYear}`
+          `/malla/${carreraPrincipal.codigo}/${carreraPrincipal.catalogo}`
         );
       } else {
         navigate('/malla/');
       }
+
     } catch (err: any) {
       console.error('Error en login:', err);
       
+      // Manejo de errores basado en la respuesta del backend
       if (err.response?.status === 401) {
-        setError('Credenciales incorrectas');
+        setError('Credenciales incorrectas o usuario no registrado');
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
-        setError('Error al iniciar sesión. Intenta nuevamente.');
+        setError('Error al conectar con el servidor UCN. Intenta nuevamente.');
       }
     } finally {
       setLoading(false);
@@ -104,7 +111,7 @@ const Login: React.FC = () => {
         )}
 
         <Button variant="green" type="submit" disabled={loading}>
-          {loading ? 'Cargando...' : 'Ingresar'}
+          {loading ? 'Validando con UCN...' : 'Ingresar'}
         </Button>
       </form>
     </div>

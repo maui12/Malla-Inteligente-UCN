@@ -1,3 +1,5 @@
+import type { Career } from "./Career";
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -30,6 +32,8 @@ export interface User {
   email: string;
   name: string;
   role: 'student' | 'admin';
+  rut: string;        
+  carreras: Career[];
   careerCode?: string;
   yearOfAdmission?: number;
   curriculumCatalogYear?: number;

@@ -14,7 +14,7 @@ function App() {
           
           {/* Rutas protegidas */}
           <Route
-            path="/malla/:userId/:careerCode/:catalogYear"
+            path="/malla/:careerCode/:catalogYear"
             element={
               <ProtectedRoute>
                 <MallaPage />

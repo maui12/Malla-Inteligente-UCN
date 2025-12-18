@@ -3,46 +3,55 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { StudentService } from '../student/student.service';
 import { AdminService } from '../admin/admin.service';
+import { ExternalApiService } from '../external-api/external-api.service'; // Asegura la ruta
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly studentService: StudentService,
     private readonly adminService: AdminService,
+    private readonly externalApi: ExternalApiService,
     private readonly jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string) {
-    // 1. Buscar como estudiante
-    let user: any = await this.studentService.findByEmail(email);
-    let role = 'student';
+    try {
+      const ucnData = await this.externalApi.getFullStudentData({ email, password });
 
-    // 2. Si no está, buscar como admin
-    if (!user) {
-      user = await this.adminService.findByEmail(email);
-      role = 'admin';
+      if (ucnData && ucnData.rut) {
+        const student = await this.studentService.upsertFromUCN(
+          email,
+          ucnData.rut,
+          ucnData.carreras
+        );
+        return { ...student, role: 'student' };
+      }
+    } catch (error) {
+      console.log('Login UCN fallido, buscando en base de datos local...');
     }
 
-    if (!user) throw new UnauthorizedException('Credenciales incorrectas');
+    //LOGICA PARA ADMINS O FALLBACK LOCAL
+    const admin = await this.adminService.findByEmail(email);
+    if (admin) {
+      const isMatch = await bcrypt.compare(password, admin.password);
+      if (isMatch) return { ...admin, role: 'admin' };
+    }
 
-    const passOK = await bcrypt.compare(password, user.passwordHash);
-    if (!passOK) throw new UnauthorizedException('Credenciales incorrectas');
-
-    const { passwordHash, ...cleanUser } = user;
-
-    return { ...cleanUser, role };
+    throw new UnauthorizedException('Credenciales inválidas');
   }
 
   async login(user: any) {
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    };
-
+    const payload = { sub: user.id, email: user.email, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
-      user,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        rut: user.rut,
+        carreras: user.carreras, //El frontend ahora recibe todo procesado
+        role: user.role,
+      },
     };
   }
 }

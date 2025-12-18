@@ -8,6 +8,12 @@ export class Student {
   @Column({ unique: true })
   email: string;
 
+  @Column({ nullable: true })
+  rut: string;
+
+  @Column({ type: 'simple-json', nullable: true })
+  carreras: any[]; 
+
   @Column()
   passwordHash: string;
 

@@ -3,5 +3,8 @@ export interface Course {
   asignatura: string;    
   creditos: number;      
   nivel: number;         
-  prereq?: string[];        //vienen como string en el endpoint
+  prereq?: string[];     
+  status?: "APROBADO" | "REPROBADO" | "PENDIENTE" | "CURSANDO"; 
+  period?: string | null;
+  nrc?: string | null;
 }
