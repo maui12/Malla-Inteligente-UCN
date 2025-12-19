@@ -10,6 +10,7 @@ import { ProgressModule } from './progress/progress.module';
 import { ExternalApiModule } from './external-api/external-api.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AdminModule } from './admin/admin.module';
+import { ProjectionModule } from './projection/projection.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AdminModule } from './admin/admin.module';
     ProgressModule,
     ExternalApiModule,
     AnalyticsModule,
+    ProjectionModule
   ],
 })
 export class AppModule {}

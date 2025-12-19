@@ -46,7 +46,7 @@ export default function CurriculumPage() {
   };
 
   const floatingActions = [
-    { label: "Crear Proyección", variant: "green" as const, onClick: () => navigate('/proyeccion/${careerCode}/${catalogYear}') },
+    { label: "Crear Proyección", variant: "green" as const, onClick: () => navigate(`/proyeccion/${careerCode}/${catalogYear}`) },
     { label: "Ver proyecciones guardadas", variant: "blue" as const, onClick: () => console.log("Ver") }
   ];
 

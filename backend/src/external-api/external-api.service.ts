@@ -99,7 +99,7 @@ export class ExternalApiService {
   }
 
   
-  private async fetchMalla(codigoCarrera: string, catalogo: string) {
+  public async fetchMalla(codigoCarrera: string, catalogo: string = '2020') {
     const url = `${this.losVilosApiBaseUrl}/mallas?${codigoCarrera}-${catalogo}`;
     const headers = { 'X-HAWAII-AUTH': this.hawaiiAuthToken };
     
@@ -108,10 +108,8 @@ export class ExternalApiService {
   }
 
  
-  private async fetchAvance(rut: string, codigoCarrera: string) {
+  public async fetchAvance(rut: string, codigoCarrera: string) {
     const url = `${this.puclaroApiBaseUrl}/avance.php?rut=${rut}&codcarrera=${codigoCarrera}`;
-    
-    
     return this.fetchApi<any[]>(url, 'Avance');
   }
 }
