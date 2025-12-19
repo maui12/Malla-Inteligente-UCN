@@ -79,6 +79,26 @@ export default function CreateProjectionPage() {
     }
   };
 
+  const handleSaveProjection = async () => {
+    if (!projectionResult) return;
+
+    const name = prompt("Dale un nombre a esta proyección:", "Mi Plan A");
+    if (!name) return;
+
+    try {
+      await axios.post('http://localhost:3000/projection/save', {
+        studentId: user?.rut,
+        careerCode: careerCode,
+        name: name,
+        data: projectionResult
+      });
+      
+      alert("Proyección guardada exitosamente");
+    } catch (err) {
+      console.error(err);
+      alert("Error al guardar la proyección");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -97,32 +117,6 @@ export default function CreateProjectionPage() {
       </header>
 
       <div className={styles.content}>
-        
-        {/* 1. SELECCIÓN DE MODO */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Modo de Planificación</h2>
-          <div className={styles.modeSelector}>
-            <button
-              className={`${styles.modeButton} ${
-                settings.mode === "manual" ? styles.modeButtonActive : ""
-              }`}
-              onClick={() => handleModeChange("manual")}
-            >
-              <div className={styles.modeIcon}>✋</div>
-              <div className={styles.modeLabel}>Manual</div>
-            </button>
-
-            <button
-              className={`${styles.modeButton} ${
-                settings.mode === "automatic" ? styles.modeButtonActive : ""
-              }`}
-              onClick={() => handleModeChange("automatic")}
-            >
-              <div className={styles.modeIcon}>🤖</div>
-              <div className={styles.modeLabel}>Automático</div>
-            </button>
-          </div>
-        </section>
 
         {/* 2. CONFIGURACIÓN (SLIDER) */}
         <section className={styles.section}>
@@ -160,7 +154,7 @@ export default function CreateProjectionPage() {
             disabled={loading}
             style={{ width: '100%', padding: '15px', fontSize: '1.1rem' }}
           >
-            {loading ? "🔄 Calculando Ruta Óptima..." : "Generar Proyección"}
+            {loading ? "Calculando Ruta Óptima..." : "Generar Proyección"}
           </Button>
         </div>
 
@@ -187,6 +181,13 @@ export default function CreateProjectionPage() {
           <section className={styles.section} style={{ marginTop: '30px', borderTop: '2px dashed #e2e8f0', paddingTop: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h2 className={styles.sectionTitle} style={{ margin: 0 }}>Tu Ruta Académica</h2>
+              <Button 
+                variant="blue" 
+                onClick={handleSaveProjection}
+                style={{ padding: '8px 15px' }}
+              >
+                Guardar esta Proyección
+              </Button>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '0.9rem', color: '#64748b' }}>Graduación Estimada</div>
                 <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#059669' }}>

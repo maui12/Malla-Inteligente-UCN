@@ -1,13 +1,19 @@
-// src/projection/projection.service.ts
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { ExternalApiService } from '../external-api/external-api.service';
 import { autoPlan } from '../simulation/domain/auto-planner';
+import { Projection } from './entities/projection.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProjectionService {
   private readonly logger = new Logger(ProjectionService.name);
 
-  constructor(private readonly externalApi: ExternalApiService) {}
+  constructor(
+    @InjectRepository(Projection)
+    private projectionRepo: Repository<Projection>,
+    private readonly externalApi: ExternalApiService
+  ) {}
 
 
   async createAutomaticProjection(dto: { studentId: string; careerCode: string; maxCredits: number; catalogo?: string }) {
@@ -79,5 +85,24 @@ export class ProjectionService {
       this.logger.error(error);
       throw new BadRequestException("No se pudo generar la proyección: " + error.message);
     }
+  }
+
+
+  async saveProjection(dto: { studentId: string; careerCode: string; name: string; data: any }) {
+    const newProjection = this.projectionRepo.create({
+      studentRut: dto.studentId,
+      careerCode: dto.careerCode,
+      name: dto.name,
+      data: dto.data
+    });
+    return await this.projectionRepo.save(newProjection);
+  }
+
+
+  async findAllByStudent(studentId: string) {
+    return await this.projectionRepo.find({
+      where: { studentRut: studentId },
+      order: { createdAt: 'DESC' }
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param } from '@nestjs/common';
 import { ProjectionService } from './projection.service';
 import { CreateProjectionDto } from './dto/create-projection';
 
@@ -10,4 +10,14 @@ export class ProjectionController {
   createProjection(@Body() dto: CreateProjectionDto) {
     return this.projectionService.createAutomaticProjection(dto);
   }
+
+  @Post('save')
+    save(@Body() body: any) {
+    return this.projectionService.saveProjection(body);
+    }
+
+  @Get('student/:rut')
+    findAll(@Param('rut') rut: string) {
+    return this.projectionService.findAllByStudent(rut);
+    }
 }

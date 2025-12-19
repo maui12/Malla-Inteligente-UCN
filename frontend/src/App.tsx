@@ -5,6 +5,7 @@ import Login from './pages/Login/Login';
 import MallaPage from './pages/CurriculumPage/CurriculumPage/CurriculumPage'; 
 import CreateProjectionPage from './pages/CreateProjectionPage/CreateProjectionPage';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
+import SavedProjectionsPage from './pages/SavedProjectionsPage/SavedProjectionsPage';
 
 function App() {
   return (
@@ -31,6 +32,14 @@ function App() {
               </ProtectedRoute>
               } 
             />
+          
+          <Route 
+            path="/proyecciones-guardadas" 
+            element={
+              <ProtectedRoute>
+                <SavedProjectionsPage />
+              </ProtectedRoute>} 
+              />
   
           {/* Ruta para admins */}
           <Route
